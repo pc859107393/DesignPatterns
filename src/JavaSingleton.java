@@ -1,5 +1,6 @@
 /**
  * Java的单例
+ *
  * @author cheng
  */
 public class JavaSingleton {
@@ -8,14 +9,17 @@ public class JavaSingleton {
     private static JavaSingleton instance = null;
 
     //私有化类，防止被实例化( new )
-    private JavaSingleton(){
+    private JavaSingleton() {
 
     }
 
     //实例化，加锁保证线程安全,如果不考虑线程安全则去掉 synchronized
-    public synchronized static JavaSingleton getInstance() {
+    //改进：并不需要每次都加锁来判断，我们可以确认没有实例化再加锁
+    public static JavaSingleton getInstance() {
         if (instance == null) {
+            synchronized (JavaSingleton.class) {
                 instance = new JavaSingleton();
+            }
         }
         return instance;
     }
