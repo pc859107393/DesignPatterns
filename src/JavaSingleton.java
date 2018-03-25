@@ -27,4 +27,16 @@ public class JavaSingleton {
 
         return instance;
     }
+
+    //当然，项目是千变万化的，但单例的核心是：线程安全、延迟加载、序列化和反序列化安全
+    //同样的有一种更加简便的写法如下(内部静态类在未使用的时候不会创建且仅仅只会被创建一次)：
+
+    private static class Factory {
+        private static JavaSingleton singleton = new JavaSingleton();
+    }
+
+    public static JavaSingleton getStaticSingleton() {
+        return Factory.singleton;
+    }
+
 }
