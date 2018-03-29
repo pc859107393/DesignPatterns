@@ -9,6 +9,13 @@ public class MainClass {
                 .words("上班划水不是好员工！")
                 .build();
 
+        KotlinBuilder builder1 = new KotlinBuilder.Builder()
+                .name("小李")
+                .tag("小年轻、愤青、爱看片")
+                .age(22)
+                .sex(false)
+                .words("上班划水不是好员工！")
+                .build();
 
     }
 
