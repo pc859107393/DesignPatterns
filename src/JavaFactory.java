@@ -13,21 +13,23 @@ public class JavaFactory {
 
 
     /**
-     * 在有个一些"福特大叔"后，我们做其他事情的人，只有找这些"福特大叔"造车车。
+     * 现在客户量上来了，然后就有了专门的工厂来接单生产，客户只关心他们所要的
      */
-    class BaoNiu {
-        public BaoNiu() {
+    class BaoNiu extends CarFactory {
+        @Override
+        public void createCar() {
             System.out.println("我生产了一个宝牛汽车！");
         }
     }
 
-    class HanNiu {
-        public HanNiu() {
+    class HanNiu extends CarFactory {
+        @Override
+        public void createCar() {
             System.out.println("我生产了一个汗牛汽车！");
         }
     }
 
-    public Object createCar(Class clazz) {
+    public CarFactory initFactory(Class clazz) {
         if (clazz.getName().equals(BaoNiu.class.getName())) return new BaoNiu();
         else if (clazz.getName().equals(HanNiu.class.getName())) return new HanNiu();
         else return null;
@@ -35,6 +37,17 @@ public class JavaFactory {
 
     public static void main(String[] args) {
         JavaFactory factory = new JavaFactory();
-        factory.createCar(BaoNiu.class);
+        factory.initFactory(BaoNiu.class);
+        //因为这个工厂可能找不到你要生产的类型，所以必须判断不能为空
+        factory.createCar();
+    }
+
+    /**
+     * 生产汽车的人或者机构随着需求的变大，就产生了，所以我们有个进一步的工厂了<br/>
+     * 我们工厂下面有一些工作车间，但是对外他们都是工厂，所以我们不管内部，只需要指明是什么汽车
+     */
+    abstract class CarFactory {
+        public abstract void createCar();
     }
 }
+
