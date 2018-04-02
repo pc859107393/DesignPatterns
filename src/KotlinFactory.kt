@@ -2,42 +2,88 @@ class KotlinFactory {
 
 
     /**
-     * 现在客户量上来了，然后就有了专门的工厂来接单生产，客户只关心他们所要的
+     * 这个宝牛汽车有自己的特性
      */
-    internal inner class BaoNiu : CarFactory() {
-        override fun createCar() {
-            println("我生产了一个宝牛汽车！")
-        }
-    }
+    internal class BaoNiu : CarModel {
+        private var model: String? = null
 
-    internal inner class HanNiu : CarFactory() {
-        override fun createCar() {
-            println("我生产了一个汗牛汽车！")
+        override fun say() {
+            println(this.model)
         }
-    }
 
-    internal fun initFactory(clazz: Class<*>): CarFactory? {
-        return when (clazz.name) {
-            BaoNiu::class.java.name -> BaoNiu()
-            HanNiu::class.java.name -> HanNiu()
-            else -> null
+        override fun setModel(model: String) {
+            this.model = model
         }
     }
 
     /**
-     * 生产汽车的人或者机构随着需求的变大，就产生了，所以我们有个进一步的工厂了<br></br>
-     * 我们工厂下面有一些工作车间，但是对外他们都是工厂，所以我们不管内部，只需要指明是什么汽车
+     * 汗牛汽车跟其他的汽车也是不一样
      */
-    internal abstract inner class CarFactory {
-        abstract fun createCar()
+    internal class HanNiu : CarModel {
+        private var model: String? = null
+
+        override fun say() {
+            println(this.model)
+        }
+
+        override fun setModel(model: String) {
+            this.model = model
+        }
+    }
+
+    /**
+     * 则是抽象的汽车模型
+     */
+    internal interface CarModel {
+        fun say()
+
+        fun setModel(model: String)
+    }
+
+    /**
+     * 产生了大规模的工厂，面很有不同的车间，生产不同的汽车
+     */
+    abstract class AbstractFactory {
+        /**
+         * 宝牛车间
+         *
+         * @return
+         */
+        internal abstract fun createBaoNiuCar(): CarModel
+
+        /**
+         * 汗牛车间
+         *
+         * @return
+         */
+        internal abstract fun createHanNiuCar(): CarModel
+    }
+
+    /**
+     * 工厂生产不同的汽车，同样的汽车也有不同的属性
+     */
+    class CarFactory : AbstractFactory() {
+
+        override fun createBaoNiuCar(): BaoNiu {
+            return BaoNiu()
+        }
+
+        override fun createHanNiuCar(): HanNiu {
+            return HanNiu()
+        }
     }
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val factory = KotlinFactory().initFactory(BaoNiu::class.java)
-            //因为这个工厂可能找不到你要生产的类型，所以必须判断不能为空
-            factory?.createCar()
+            val factory = CarFactory()
+            val car1 = factory.createBaoNiuCar()
+            car1.setModel("我是宝牛品牌汽车，产自CarFactory，实现了自己的特性")
+            car1.say()
+
+            val car2 = factory.createHanNiuCar()
+            car2.setModel("我是汗牛汽车，我和上面的不一样")
+            car2.say()
         }
     }
 }

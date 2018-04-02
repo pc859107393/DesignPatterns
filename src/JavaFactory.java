@@ -4,50 +4,94 @@
  * @author cheng
  */
 public class JavaFactory {
-    /**
-     * 没有工厂模式，自己创建汽车，自己就成了"福特大叔"
-     */
-    public void createCar() {
-        System.out.println("自己去创建一个汽车，所以有了福特大叔");
-    }
-
 
     /**
-     * 现在客户量上来了，然后就有了专门的工厂来接单生产，客户只关心他们所要的
+     * 这个宝牛汽车有自己的特性
      */
-    class BaoNiu extends CarFactory {
+    static class BaoNiu implements CarModel {
+        private String model;
+
         @Override
-        public void createCar() {
-            System.out.println("我生产了一个宝牛汽车！");
+        public void say() {
+            System.out.println(this.model);
+        }
+
+        @Override
+        public void setModel(String model) {
+            this.model = model;
         }
     }
 
-    class HanNiu extends CarFactory {
+    /**
+     * 汗牛汽车跟其他的汽车也是不一样
+     */
+    static class HanNiu implements CarModel {
+        private String model;
+
         @Override
-        public void createCar() {
-            System.out.println("我生产了一个汗牛汽车！");
+        public void say() {
+            System.out.println(this.model);
+        }
+
+        @Override
+        public void setModel(String model) {
+            this.model = model;
         }
     }
 
-    public CarFactory initFactory(Class clazz) {
-        if (clazz.getName().equals(BaoNiu.class.getName())) return new BaoNiu();
-        else if (clazz.getName().equals(HanNiu.class.getName())) return new HanNiu();
-        else return null;
+    /**
+     * 则是抽象的汽车模型
+     */
+    interface CarModel {
+        public void say();
+
+        public void setModel(String model);
+    }
+
+    /**
+     * 产生了大规模的工厂，面很有不同的车间，生产不同的汽车
+     */
+    public abstract static class AbstractFactory {
+        /**
+         * 宝牛车间
+         *
+         * @return
+         */
+        public abstract CarModel createBaoNiuCar();
+
+        /**
+         * 汗牛车间
+         *
+         * @return
+         */
+        public abstract CarModel createHanNiuCar();
+    }
+
+    /**
+     * 工厂生产不同的汽车，同样的汽车也有不同的属性
+     */
+    public static class CarFactory extends AbstractFactory {
+
+        @Override
+        public BaoNiu createBaoNiuCar() {
+            return new BaoNiu();
+        }
+
+        @Override
+        public HanNiu createHanNiuCar() {
+            return new HanNiu();
+        }
     }
 
     public static void main(String[] args) {
-        JavaFactory factory = new JavaFactory();
-        factory.initFactory(BaoNiu.class);
-        //因为这个工厂可能找不到你要生产的类型，所以必须判断不能为空
-        factory.createCar();
-    }
+        AbstractFactory factory = new CarFactory();
+        CarModel car1 = factory.createBaoNiuCar();
+        car1.setModel("我是宝牛品牌汽车，产自CarFactory，实现了自己的特性");
+        car1.say();
 
-    /**
-     * 生产汽车的人或者机构随着需求的变大，就产生了，所以我们有个进一步的工厂了<br/>
-     * 我们工厂下面有一些工作车间，但是对外他们都是工厂，所以我们不管内部，只需要指明是什么汽车
-     */
-    abstract class CarFactory {
-        public abstract void createCar();
+        CarModel car2 = factory.createHanNiuCar();
+        car2.setModel("我是汗牛汽车，我和上面的不一样");
+        car2.say();
     }
 }
 
